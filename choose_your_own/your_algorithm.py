@@ -3,6 +3,8 @@
 import matplotlib.pyplot as plt
 from prep_terrain_data import makeTerrainData
 from class_vis import prettyPicture
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.svm import SVC
 
 features_train, labels_train, features_test, labels_test = makeTerrainData()
 
@@ -31,12 +33,14 @@ plt.show()
 ### your code here!  name your classifier object clf if you want the 
 ### visualization code (prettyPicture) to show you the decision boundary
 
+svc = SVC(probability=True, kernel='linear', C=0.2)
 
+clf = AdaBoostClassifier(base_estimator=svc, n_estimators=50, random_state=0, learning_rate=.1)
+clf.fit(features_train, labels_train)
+pred = clf.predict(features_test)
 
-
-
-
-
+print "Number of features: " + str(len(features_train[0]))
+print clf.score(features_test, labels_test)
 
 try:
     prettyPicture(clf, features_test, labels_test)
